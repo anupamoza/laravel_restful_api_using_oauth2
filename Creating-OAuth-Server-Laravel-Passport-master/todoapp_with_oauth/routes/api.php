@@ -21,3 +21,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  Route::middleware('auth:api')->get('/todos', function (Request $request) {
         return $request->user()->todos;
     });
+
+ /*Route::get('/todos', function(Request $request) {
+    ...
+})->middleware('client');*/
+
+Route::middleware('client')->get('/json_response', function (Request $request) {
+        return '{ "name":"John", "age":31, "city":"New York" }';
+    });
+
