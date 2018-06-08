@@ -6,15 +6,20 @@ use Auth;
 use App\Todo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Services\TodoApiServices;
 
 class TodoController extends Controller
 {
+
     /**
      * Class constructor.
      */
-    public function __construct()
+    public function __construct(Request $request, TodoApiServices $services) 
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
+        $this->service = $services;
+        $this->request = $request;
+
     }
 
     /**
@@ -45,15 +50,15 @@ class TodoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $data = $request->validate(['item' => 'required|between:2,50']);
+        $data = $this->request->validate(['item' => 'required|between:2,50']);
 
         Auth::user()->todos()->save(new Todo($data));
 
         return redirect()->route('todos.index')->withStatus('Todo saved!');
     }
-
+ 
     /**
      * Update the specified resource in storage.
      *
@@ -61,15 +66,16 @@ class TodoController extends Controller
      * @param  \App\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Todo $todo)
+    public function update(Todo $todo)
     {
-        $data = $request->validate(['done' => 'required|boolean']);
+        $data = $this->request->validate(['done' => 'required|boolean']);
 
         $todo->done = $data['done'];
         $todo->completed_on = $data['done'] == true ? Carbon::now() : null;
 
         return response(['status' => $todo->save() ? 'success' : 'error']);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -81,4 +87,6 @@ class TodoController extends Controller
     {
         return response(['status' => $todo->delete() ? 'success' : 'error']);
     }
+
+    
 }

@@ -22,41 +22,9 @@ use Illuminate\Http\Request;
 /**
 * Authorization Code grant
 */
-Route::get('/', function () {
-    $query = http_build_query([
-        'client_id' => 3, // Replace with Client ID
-        'redirect_uri' => 'http://192.168.1.94:8001/callback',
-        'response_type' => 'code',
-        'scope' => ''
-    ]); 
-    return redirect('http://192.168.1.94:8000/oauth/authorize?'.$query);
-});
-
-Route::get('/callback', function (Request $request) {
-    $response = (new GuzzleHttp\Client)->post('http://192.168.1.94:8000/oauth/token', [
-        'form_params' => [
-            'grant_type' => 'authorization_code',           
-            'client_id' => 3, // Replace with Client ID
-            'client_secret' => '1aOQRDHsTjFqEPvAuLlOkKyYh1Y4XUpxsfe9kDOD', // Replace with client secret
-            'redirect_uri' => 'http://192.168.1.94:8001/callback',
-            'code' => $request->code,
-        ]
-    ]);
-
-    session()->put('token', json_decode((string) $response->getBody(), true));
-
-    return redirect('/todos');
-});
-
-Route::get('/todos', function () {
-    $response = (new GuzzleHttp\Client)->get('http://192.168.1.94:8000/api/todos', [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ]
-    ]);
-
-    return json_decode((string) $response->getBody(), true);
-});
+Route::get('/', 'AuthorizationCodeGrantController@index');
+Route::get('/callback', 'AuthorizationCodeGrantController@callback');
+Route::get('/todos', 'AuthorizationCodeGrantController@todos');
 
 /* // Implicit Grant type
  Route::get('/redirect', function () {
@@ -71,49 +39,28 @@ Route::get('/todos', function () {
 }); */
 
 /**
-* Password grant type
+* Password grant type GET Request
 */
-Route::get('/direct_todos', function (Request $request) {
-    $response = (new GuzzleHttp\Client)->post('http://192.168.1.94:8000/oauth/token', [
-        'form_params' => [
-            'grant_type' => 'password',
-            'client_id' => 5, // Replace with Client ID
-            'client_secret' => 'oqtwKUNUjkA0Tn3FabueHqz68age4eNvkq2s3dcx', // Replace with client secret
-            'username' => 'anupam.oza@sts.in',
-            'password' => '123456',
-            'scope' => '',
-        ]
-    ]);
+Route::get('/password', 'PasswordGrantController@index');
+Route::get('/password/todos', 'PasswordGrantController@todos');
 
-    session()->put('token', json_decode((string) $response->getBody(), true));
-    return redirect('/list_todos');
-});
+Route::get('/password/{id}', 'PasswordGrantController@index');
+Route::get('/password/todos/{id}', 'PasswordGrantController@show');
 
-Route::get('/list_todos', function () {
-    $response = (new GuzzleHttp\Client)->get('http://192.168.1.94:8000/api/todos', [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ]
-    ]);
-    /*echo '<pre>';
-    print_r(Session::get('token')); 
-    echo session()->get('token.access_token');
-    echo '</pre>';
-    exit;*/
-    echo '<pre>';
-    //print_r($response); 
-    print_r(json_decode((string) $response->getBody(), true)); 
-    echo '</pre>';
-    //exit;
-    return json_decode((string) $response->getBody(), true);
-});
+
+/**
+* Password grant type POST/PUT/DELETE Request
+*/
+Route::post('/password', 'PasswordGrantController@store');
+Route::put('/password/{id}', 'PasswordGrantController@update');
+Route::delete('/password/{id}', 'PasswordGrantController@destroy');
 
 /**
 * Implicit grant type
 */
-Route::get('/redirect', function () {
+Route::get('/implicit_redirect', function () {
     $query = http_build_query([
-        'client_id' => 3,
+        'client_id' => 6,
         'redirect_uri' => 'http://192.168.1.94:8001/implicit_todos',
         'response_type' => 'token',
         'scope' => '',
@@ -122,23 +69,23 @@ Route::get('/redirect', function () {
     return redirect('http://192.168.1.94:8000/oauth/authorize?'.$query);
 });
 
-/*Route::get('/callback2', function (Request $request) {
+Route::get('/implicit_todos', function (Request $request) {
     $response = (new GuzzleHttp\Client)->post('http://192.168.1.94:8000/oauth/token', [
         'form_params' => [
-            'grant_type' => 'authorization_code',           
-            'client_id' => 3, // Replace with Client ID
-            'client_secret' => '1aOQRDHsTjFqEPvAuLlOkKyYh1Y4XUpxsfe9kDOD', // Replace with client secret
-            'redirect_uri' => 'http://192.168.1.94:8001/callback',
-            'code' => $request->code,
+            //'grant_type' => 'authorization_code',           
+            'client_id' => 6, // Replace with Client ID
+            //'client_secret' => '11kMJFaiBG2T51uhQcPuIpTBLtyM1fYIEFJWohxk', // Replace with client secret
+            'redirect_uri' => 'http://192.168.1.94:8001/implicit_todos',
+           // 'code' => $request->code,
         ]
     ]);
 
     session()->put('token', json_decode((string) $response->getBody(), true));
 
-    return redirect('/implicit_todos');
-});*/
+    return redirect('/implicit_todos_list');
+});
 
-Route::get('/implicit_todos', function () {
+Route::get('/implicit_todos_list', function () {
     $response = (new GuzzleHttp\Client)->get('http://192.168.1.94:8000/api/json_response', [
         'headers' => [
             'Authorization' => 'Bearer '.session()->get('token.access_token')
