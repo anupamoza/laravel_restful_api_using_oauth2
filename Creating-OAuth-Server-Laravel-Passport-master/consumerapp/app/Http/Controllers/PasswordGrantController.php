@@ -30,12 +30,6 @@ class PasswordGrantController extends Controller
     public function index($id='')
     {
        return  $this->services->index($id);  
-       /* if($id != ''){
-        return redirect('/password/todos/'.$id);
-        }else{
-            return redirect('/password/todos');
-        }*/
-        
     }
 
 
@@ -47,12 +41,6 @@ class PasswordGrantController extends Controller
     public function todos()
     {
        return $this->services->todos();  
-       /*$response = $this->guzzle_http_client->get('http://192.168.1.94:8000/api/todos', [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ]
-        ]);       
-        return json_decode((string) $response->getBody(), true);*/
     }
 
     /**
@@ -74,18 +62,6 @@ class PasswordGrantController extends Controller
     public function store(Request $request)
     {
         return $this->services->store();  
-
-       /* $data = $request->validate(['item' => 'required|between:2,50']);              
-        
-        $response = $this->guzzle_http_client->post('http://192.168.1.94:8000/api/todos', [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ],
-        'form_params' => [
-         'item' => $request->input('item'),
-        ],
-        ]);        
-        return json_decode((string) $response->getBody(), true);*/
     }
 
     /**
@@ -97,13 +73,6 @@ class PasswordGrantController extends Controller
     public function show($id)
     {
         return $this->services->show($id);  
-        //echo 'here'; exit;
-        /*$response = $this->guzzle_http_client->get('http://192.168.1.94:8000/api/todos/'.$id, [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ]
-        ]);       
-        return json_decode((string) $response->getBody(), true);*/
     }
 
     /**
@@ -127,17 +96,6 @@ class PasswordGrantController extends Controller
     public function update(Request $request, $id)
     {
         return $this->services->update($id);
-        /*$data = $request->validate(['item' => 'required|between:2,50']);            
-        $response = $this->guzzle_http_client->put('http://192.168.1.94:8000/api/todos/'.$id, [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ],
-        'form_params' => [
-         'id' => $id,
-         'item' => $request->input('item'),
-        ],
-        ]);        
-        return json_decode((string) $response->getBody(), true);*/
     }
 
     /**
@@ -149,14 +107,5 @@ class PasswordGrantController extends Controller
     public function destroy($id)
     {          
         return $this->services->destroy($id);
-        /*$response = $this->guzzle_http_client->delete('http://192.168.1.94:8000/api/todos/'.$id, [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ],
-        'form_params' => [
-         'id' => $id,
-        ],
-        ]);        
-        return json_decode((string) $response->getBody(), true);*/
     }
 }
