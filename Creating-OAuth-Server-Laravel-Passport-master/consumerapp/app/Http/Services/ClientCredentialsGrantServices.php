@@ -35,11 +35,11 @@ class ClientCredentialsGrantServices extends Services {
     {        
         if($id != '')
         {
-            return redirect('/client/users/'.$id);
+            return redirect('/client_credentials/users/'.$id);
         }
         else
         {
-            return redirect('/client/users');
+            return redirect('/client_credentials/users');
         }
         
     }

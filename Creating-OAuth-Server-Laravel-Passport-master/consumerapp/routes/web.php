@@ -108,6 +108,18 @@ Route::get('/implicit_todos_list', function () {
 /**
 * Client credentials grant type
 */
+
+/**
+* Password grant type GET Request
+*/
+Route::get('/client_credentials', 'ClientCredentialsGrantController@index');
+Route::get('/client_credentials/users', 'ClientCredentialsGrantController@users');
+
+Route::get('/client_credentials/{id}', 'ClientCredentialsGrantController@index');
+Route::get('/client_credentials/users/{id}', 'ClientCredentialsGrantController@show');
+
+
+
 Route::get('/client_todo', function (Request $request) {
     $response = (new GuzzleHttp\Client)->post('http://192.168.1.94:8000/oauth/token', [
         'form_params' => [
