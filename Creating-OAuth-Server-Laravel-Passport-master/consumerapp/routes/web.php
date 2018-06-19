@@ -106,53 +106,10 @@ Route::get('/implicit_todos_list', function () {
 
 
 /**
-* Client credentials grant type
-*/
-
-/**
-* Password grant type GET Request
+* Client credentials grant type GET Request
 */
 Route::get('/client_credentials', 'ClientCredentialsGrantController@index');
 Route::get('/client_credentials/users', 'ClientCredentialsGrantController@users');
 
 Route::get('/client_credentials/{id}', 'ClientCredentialsGrantController@index');
 Route::get('/client_credentials/users/{id}', 'ClientCredentialsGrantController@show');
-
-
-
-Route::get('/client_todo', function (Request $request) {
-    $response = (new GuzzleHttp\Client)->post('http://192.168.1.94:8000/oauth/token', [
-        'form_params' => [
-            'grant_type' => 'client_credentials',
-            'client_id' => 3, // Replace with Client ID
-            'client_secret' => '1aOQRDHsTjFqEPvAuLlOkKyYh1Y4XUpxsfe9kDOD', // Replace with client secret
-        ]
-    ]);
-
-    session()->put('token', json_decode((string) $response->getBody(), true));
-    /*echo '<pre>';
-    print_r(Session::get('token')); 
-    echo session()->get('token.access_token');
-    echo '</pre>';
-    exit;*/
-    return redirect('/list_c_todos');
-});
-
-Route::get('/list_c_todos', function () {
-    $response = (new GuzzleHttp\Client)->get('http://192.168.1.94:8000/api/json_response', [
-        'headers' => [
-            'Authorization' => 'Bearer '.session()->get('token.access_token')
-        ]
-    ]);
-    /*echo '<pre>';
-    print_r(Session::get('token')); 
-    echo session()->get('token.access_token');
-    echo '</pre>';
-    exit;*/
-    echo '<pre>';
-    //print_r($response); 
-    print_r(json_decode((string) $response->getBody(), true)); 
-    echo '</pre>';
-    //exit;
-    return json_decode((string) $response->getBody(), true);
-});
