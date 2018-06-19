@@ -16,7 +16,7 @@ class TodoController extends Controller
      */
     public function __construct(Request $request, TodoApiServices $services) 
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
         $this->service = $services;
         $this->request = $request;
 
