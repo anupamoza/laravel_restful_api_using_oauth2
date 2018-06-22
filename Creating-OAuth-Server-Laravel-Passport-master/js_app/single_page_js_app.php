@@ -11,7 +11,7 @@
   	var hash = $(location).attr('hash');
   	var params = { 
   		client_id:10, 
-  		redirect_uri:'http://192.168.1.94/test/single_page_js_app.php',
+  		redirect_uri:'http://192.168.1.94/js_app/single_page_js_app.php',
   		response_type:'token',
   		scope:'',
   	};
